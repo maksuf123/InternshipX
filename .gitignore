@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+backend/.env
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# VS Code settings
+.vscode/
+
+# Build folders
+dist/
+build/
+
+# Uploads (keep folder but ignore contents)
+backend/uploads/*
+!backend/uploads/.gitkeep
