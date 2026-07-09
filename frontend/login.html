@@ -1,63 +1,69 @@
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
     <title>Login | InternshipX</title>
 
+    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/responsive.css">
 </head>
 
-<div class="auth-container">
-
-    <div class="auth-card">
-
-        <h1>Welcome Back</h1>
-        <p>Login to your InternshipX account</p>
-
-        <form id="loginForm">
-
-            <div class="form-group">
-                <label>Email</label>
-                <input
-                    type="email"
-                    id="email"
-                    placeholder="Enter your email"
-                    required>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="logo-section">
+                <h1>Internship<span>X</span></h1>
+                <p>Welcome back to your workspace</p>
             </div>
 
-            <div class="form-group">
-                <label>Password</label>
-                <input
-                    type="password"
-                    id="password"
-                    placeholder="Enter password"
-                    required>
-            </div>
+            <h2>Login</h2>
+            <p class="subtitle">Continue managing internships and applications.</p>
 
-            <button
-                type="submit"
-                id="loginBtn"
-                class="btn-primary">
-                Login
-            </button>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Enter your email"
+                        required>
+                </div>
 
-            <p id="message"></p>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Enter password"
+                        required>
+                </div>
 
-            <p>
-                Don't have an account?
-                <a href="register.html">Register</a>
-            </p>
+                <button
+                    type="submit"
+                    id="loginBtn"
+                    class="btn-primary">
+                    Login
+                </button>
 
-        </form>
+                <p id="message"></p>
 
+                <p class="bottom-text">
+                    Don't have an account?
+                    <a href="register.html">Register</a>
+                </p>
+            </form>
+        </div>
     </div>
 
-</div>
-
-<script src="js/config.js"></script>
-<script src="js/api.js"></script>
-<script src="js/auth.js"></script>
-
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
 </body>
+
 </html>

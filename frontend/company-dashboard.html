@@ -3,263 +3,170 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
     <title>Company Dashboard | InternshipX</title>
 
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/responsive.css">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
 </head>
 
 <body>
-
-<header class="dashboard-header">
-
-    <div class="logo">
-
-        <h2>Internship<span>X</span></h2>
-
-    </div>
-
-    <div class="header-right">
-
-        <span id="companyName">Welcome</span>
-
-        <button id="logoutBtn" class="btn-secondary">
-            Logout
-        </button>
-
-    </div>
-
-</header>
-
-<main class="dashboard-container">
-
-    <!-- Welcome -->
-
-    <section class="welcome-card">
-
-        <h1>
-            Welcome Back 👋
-        </h1>
-
-        <p>
-            Manage your internships and applicants from one place.
-        </p>
-
-    </section>
-
-    <!-- Statistics -->
-
-    <section class="stats-grid">
-
-        <div class="stat-card">
-
-            <h3>Total Internships</h3>
-
-            <h2 id="totalInternships">
-                0
-            </h2>
-
+    <header class="dashboard-header">
+        <div class="logo">
+            <h2>Internship<span>X</span></h2>
         </div>
 
-        <div class="stat-card">
-
-            <h3>Total Applications</h3>
-
-            <h2 id="totalApplications">
-                0
-            </h2>
-
-        </div>
-
-        <div class="stat-card">
-
-            <h3>Pending Reviews</h3>
-
-            <h2 id="pendingApplications">
-                0
-            </h2>
-
-        </div>
-
-    </section>
-
-    <!-- Action -->
-
-    <section class="action-section">
-
-        <button
-            id="openModalBtn"
-            class="btn-primary">
-
-            + Post New Internship
-
-        </button>
-
-    </section>
-    <div class="action-section">
-
-    <button
-        class="btn-secondary"
-        onclick="window.location.href='company-applications.html'">
-
-        View Applications
-
-    </button>
-
-</div>
-
-    <!-- Internship List -->
-
-    <section class="internship-section">
-
-        <div class="section-title">
-
-            <h2>
-                My Internships
-            </h2>
-
-        </div>
-
-        <div
-            id="internshipList"
-            class="internship-list">
-
-            <div class="empty-state">
-
-                <h3>No internships posted yet.</h3>
-
-                <p>
-                    Click "Post New Internship" to create your first internship.
-                </p>
-
-            </div>
-
-        </div>
-
-    </section>
-
-</main>
-
-
-<!-- ===========================
-     MODAL
-=========================== -->
-
-<div
-    class="modal"
-    id="internshipModal">
-
-    <div class="modal-content">
-
-        <div class="modal-header">
-
-            <h2>Post Internship</h2>
+        <div class="header-right">
+            <span id="companyName">Welcome</span>
 
             <button
-                id="closeModal">
-
-                ✕
-
+                id="logoutBtn"
+                class="btn-secondary">
+                Logout
             </button>
-
         </div>
+    </header>
 
-        <form id="internshipForm">
+    <main class="dashboard-container">
+        <section class="welcome-card">
+            <h1>Company Dashboard</h1>
+            <p>
+                Post internships, review applicants, and manage hiring activity
+                from one focused workspace.
+            </p>
+        </section>
 
-            <div class="form-group">
-
-                <label>Title</label>
-
-                <input
-                    type="text"
-                    id="title"
-                    required>
-
+        <section class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Internships</h3>
+                <h2 id="totalInternships">0</h2>
             </div>
 
-            <div class="form-group">
-
-                <label>Location</label>
-
-                <input
-                    type="text"
-                    id="location"
-                    required>
-
+            <div class="stat-card">
+                <h3>Total Applications</h3>
+                <h2 id="totalApplications">0</h2>
             </div>
 
-            <div class="form-group">
-
-                <label>Duration</label>
-
-                <input
-                    type="text"
-                    id="duration"
-                    placeholder="3 Months"
-                    required>
-
+            <div class="stat-card">
+                <h3>Pending Reviews</h3>
+                <h2 id="pendingApplications">0</h2>
             </div>
+        </section>
 
-            <div class="form-group">
-
-                <label>Stipend</label>
-
-                <input
-                    type="text"
-                    id="stipend"
-                    placeholder="₹15,000/month">
-
-            </div>
-
-            <div class="form-group">
-
-                <label>Skills</label>
-
-                <input
-                    type="text"
-                    id="skills"
-                    placeholder="HTML, CSS, JavaScript">
-
-            </div>
-
-            <div class="form-group">
-
-                <label>Description</label>
-
-                <textarea
-                    id="description"
-                    rows="5"
-                    required></textarea>
-
-            </div>
-
+        <section class="action-section">
             <button
-                type="submit"
+                id="openModalBtn"
                 class="btn-primary">
-
-                Publish Internship
-
+                Post New Internship
             </button>
 
-        </form>
+            <button
+                class="btn-secondary"
+                onclick="window.location.href='company-applications.html'">
+                View Applications
+            </button>
+        </section>
 
+        <section class="internship-section">
+            <div class="section-title">
+                <h2>My Internships</h2>
+            </div>
+
+            <div
+                id="internshipList"
+                class="internship-list">
+                <div class="empty-state">
+                    <h3>No internships posted yet.</h3>
+                    <p>Post your first internship to start collecting applications.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div
+        class="modal"
+        id="internshipModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Post Internship</h2>
+
+                <button
+                    id="closeModal"
+                    type="button"
+                    aria-label="Close modal">
+                    x
+                </button>
+            </div>
+
+            <form id="internshipForm">
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input
+                        type="text"
+                        id="title"
+                        placeholder="Frontend Developer Intern"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <input
+                        type="text"
+                        id="location"
+                        placeholder="Remote, Pune, Mumbai"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="duration">Duration</label>
+                    <input
+                        type="text"
+                        id="duration"
+                        placeholder="3 Months"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="stipend">Stipend</label>
+                    <input
+                        type="text"
+                        id="stipend"
+                        placeholder="Rs 15,000/month">
+                </div>
+
+                <div class="form-group">
+                    <label for="skills">Skills</label>
+                    <input
+                        type="text"
+                        id="skills"
+                        placeholder="HTML, CSS, JavaScript">
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea
+                        id="description"
+                        rows="5"
+                        placeholder="Describe the internship responsibilities and expectations."
+                        required></textarea>
+                </div>
+
+                <button
+                    type="submit"
+                    class="btn-primary">
+                    Publish Internship
+                </button>
+            </form>
+        </div>
     </div>
 
-</div>
-
-<script src="js/config.js"></script>
-<script src="js/api.js"></script>
-<script src="js/dashboard.js"></script>
-
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/dashboard.js"></script>
 </body>
 
 </html>

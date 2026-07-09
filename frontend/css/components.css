@@ -1,97 +1,107 @@
 /* ===========================
-   Buttons
+   Reusable Components
 =========================== */
 
-.btn-primary{
-    width:100%;
-    padding:15px;
-    border:none;
-    border-radius:10px;
-    background:#2563EB;
-    color:#fff;
-    font-size:16px;
-    font-weight:600;
-    cursor:pointer;
-    transition:.3s;
-    margin-top:10px;
+.btn-primary,
+.btn-secondary,
+.btn-danger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 46px;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 800;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        border-color .2s ease,
+        background .2s ease,
+        color .2s ease;
 }
 
-.btn-primary:hover{
-    background:#1D4ED8;
+.btn-primary {
+    border: 1px solid transparent;
+    background: var(--primary, #2563EB);
+    color: #FFFFFF;
+    box-shadow: 0 10px 20px rgba(37, 99, 235, .18);
 }
 
-.btn-secondary{
-    width:100%;
-    padding:15px;
-    margin-top:15px;
-    border:none;
-    border-radius:10px;
-    background:#F3F4F6;
-    color:#111827;
-    font-size:16px;
-    font-weight:600;
-    cursor:pointer;
-    transition:.3s;
+.btn-primary:hover {
+    background: var(--primary-dark, #1D4ED8);
+    transform: translateY(-2px);
+    box-shadow: 0 14px 28px rgba(37, 99, 235, .24);
 }
 
-.btn-secondary:hover{
-    background:#E5E7EB;
+.btn-secondary {
+    border: 1px solid var(--border, #E2E8F0);
+    background: #FFFFFF;
+    color: var(--text, #111827);
 }
 
-/* ===========================
-   Form
-=========================== */
-
-.form-group{
-    margin-bottom:20px;
+.btn-secondary:hover {
+    border-color: rgba(37, 99, 235, .35);
+    background: var(--primary-soft, #DBEAFE);
+    color: var(--primary-dark, #1D4ED8);
+    transform: translateY(-2px);
 }
 
-.form-group label{
-    display:block;
-    margin-bottom:8px;
-    font-weight:600;
-    color:#111827;
+.btn-danger {
+    border: 1px solid transparent;
+    background: var(--danger-soft, #FEE2E2);
+    color: var(--danger, #DC2626);
+}
+
+.btn-danger:hover {
+    background: var(--danger, #DC2626);
+    color: #FFFFFF;
+    transform: translateY(-2px);
+}
+
+.auth-card .btn-primary,
+.auth-card .btn-secondary {
+    width: 100%;
+}
+
+.action-section > .btn-primary,
+.action-section > .btn-secondary,
+.card-actions .btn-primary,
+.card-actions .btn-secondary,
+.card-actions .btn-danger,
+.header-right .btn-secondary {
+    width: auto;
+}
+
+.form-group {
+    margin-bottom: 18px;
 }
 
 .form-group input,
 .form-group select,
-.form-group textarea{
+.form-group textarea {
+    width: 100%;
+    padding: 13px 15px;
+    border: 1px solid var(--border, #D1D5DB);
+    border-radius: 12px;
+    font-size: 15px;
+    color: var(--text, #111827);
+    outline: none;
+    transition: border-color .2s ease, box-shadow .2s ease;
+    background: #FFFFFF;
+}
 
-    width:100%;
-    padding:14px 16px;
-
-    border:1px solid #D1D5DB;
-    border-radius:10px;
-
-    font-size:16px;
-
-    outline:none;
-
-    transition:.3s;
-
-    box-sizing:border-box;
+.form-group textarea {
+    resize: vertical;
+    min-height: 126px;
 }
 
 .form-group input:focus,
 .form-group select:focus,
-.form-group textarea:focus{
-
-    border-color:#2563EB;
-
-    box-shadow:0 0 0 3px rgba(37,99,235,.15);
-
-}
-
-/* ===========================
-   Message
-=========================== */
-
-#message{
-
-    margin-top:15px;
-
-    text-align:center;
-
-    font-weight:600;
-
+.form-group textarea:focus {
+    border-color: var(--primary, #2563EB);
+    box-shadow: var(--ring, 0 0 0 4px rgba(37, 99, 235, .14));
 }

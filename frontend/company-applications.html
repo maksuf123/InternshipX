@@ -2,155 +2,82 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
     <title>Applicants | InternshipX</title>
 
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/responsive.css">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-
-    <link rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-          rel="stylesheet">
-
 </head>
 
 <body>
-
-<header class="dashboard-header">
-
-    <div class="logo">
-
-        <h2>
-
-            Internship<span>X</span>
-
-        </h2>
-
-    </div>
-
-    <div class="header-right">
-
-        <span id="companyName">
-
-            Welcome
-
-        </span>
-
-        <button
-            id="logoutBtn"
-            class="btn-secondary">
-
-            Logout
-
-        </button>
-
-    </div>
-
-</header>
-
-<main class="dashboard-container">
-
-    <section class="welcome-card">
-
-        <h1>
-
-            Internship Applications
-
-        </h1>
-
-        <p>
-
-            Review and manage student applications.
-
-        </p>
-
-    </section>
-
-    <section class="stats-grid">
-
-        <div class="stat-card">
-
-            <h3>Total Applications</h3>
-
-            <h2 id="totalApplications">
-
-                0
-
-            </h2>
-
+    <header class="dashboard-header">
+        <div class="logo">
+            <h2>Internship<span>X</span></h2>
         </div>
 
-        <div class="stat-card">
+        <div class="header-right">
+            <span id="companyName">Welcome</span>
 
-            <h3>Pending</h3>
-
-            <h2 id="pendingApplications">
-
-                0
-
-            </h2>
-
+            <button
+                id="logoutBtn"
+                class="btn-secondary">
+                Logout
+            </button>
         </div>
+    </header>
 
-        <div class="stat-card">
+    <main class="dashboard-container">
+        <section class="welcome-card">
+            <h1>Internship Applications</h1>
+            <p>Review student profiles and move applications through the hiring flow.</p>
+        </section>
 
-            <h3>Accepted</h3>
+        <section class="action-section">
+            <button
+                class="btn-secondary"
+                onclick="window.location.href='company-dashboard.html'">
+                Back to Dashboard
+            </button>
+        </section>
 
-            <h2 id="acceptedApplications">
-
-                0
-
-            </h2>
-
-        </div>
-
-    </section>
-
-    <section class="internship-section">
-
-        <div class="section-title">
-
-            <h2>
-
-                Applicants
-
-            </h2>
-
-        </div>
-
-        <div id="applicationList">
-
-            <div class="empty-state">
-
-                <h3>
-
-                    Loading applications...
-
-                </h3>
-
+        <section class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Applications</h3>
+                <h2 id="totalApplications">0</h2>
             </div>
 
-        </div>
+            <div class="stat-card">
+                <h3>Pending</h3>
+                <h2 id="pendingApplications">0</h2>
+            </div>
 
-    </section>
+            <div class="stat-card">
+                <h3>Accepted</h3>
+                <h2 id="acceptedApplications">0</h2>
+            </div>
+        </section>
 
-</main>
+        <section class="internship-section">
+            <div class="section-title">
+                <h2>Applicants</h2>
+            </div>
 
-<script src="js/config.js"></script>
-<script src="js/api.js"></script>
-<script src="js/dashboard.js"></script>
+            <div id="applicationList">
+                <div class="empty-state">
+                    <h3>Loading applications...</h3>
+                </div>
+            </div>
+        </section>
+    </main>
 
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/dashboard.js"></script>
 </body>
 
 </html>
