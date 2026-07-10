@@ -32,8 +32,6 @@ const createTransporter = () => {
     host: "smtp-relay.brevo.com",
     port: 587,
     secure: false,
-    requireTLS: true,
-
     auth: {
         user,
         pass
@@ -73,7 +71,7 @@ const sendOTPEmail = async (email, name, otp, type = "verify") => {
         : "Your verification code is:";
 
     const mailOptions = {
-        from: `"InternshipX" <${user}>`,
+        from: `"InternshipX" <maksufmasrur786@gmail.com>`,
         to: email,
         subject,
 
