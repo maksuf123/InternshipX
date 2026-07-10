@@ -2,21 +2,57 @@ const nodemailer = require("nodemailer");
 
 const SMTP_TIMEOUT_MS = Number(process.env.SMTP_TIMEOUT_MS) || 10000;
 
-const transporter = nodemailer.createTransport({
-    service: "gmail",
+const getEmailConfig = () => {
+    const user = String(process.env.EMAIL_USER || "").trim();
+    const pass = String(process.env.EMAIL_PASS || "").replace(/\s+/g, "");
+
+    return { user, pass };
+};
+
+const getPublicEmailErrorMessage = (error) => {
+    if (error.message === "Email service is not configured.") {
+        return "Email service is not configured on the server. Add EMAIL_USER and EMAIL_PASS in Render.";
+    }
+
+    if (error.code === "EAUTH" || error.responseCode === 535) {
+        return "Email login failed. Update EMAIL_USER and the Gmail App Password in Render.";
+    }
+
+    if (error.code === "ETIMEDOUT" || error.code === "ECONNECTION" || error.code === "ESOCKET") {
+        return "Email server connection timed out. Please try again in a minute.";
+    }
+
+    return "We could not send the email code right now. Please try again in a minute.";
+};
+
+const createTransporter = () => {
+    const { user, pass } = getEmailConfig();
+
+    return nodemailer.createTransport({
+    host: "smtp-relay.brevo.com",
+    port: 587,
+    secure: false,
+    requireTLS: true,
+
     auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
+        user,
+        pass
     },
+
     connectionTimeout: SMTP_TIMEOUT_MS,
     greetingTimeout: SMTP_TIMEOUT_MS,
     socketTimeout: SMTP_TIMEOUT_MS
 });
+};
 
 const sendOTPEmail = async (email, name, otp, type = "verify") => {
 
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-        throw new Error("Email service is not configured.");
+    const { user, pass } = getEmailConfig();
+
+    if (!user || !pass) {
+        const configError = new Error("Email service is not configured.");
+        configError.publicMessage = getPublicEmailErrorMessage(configError);
+        throw configError;
     }
 
     console.log("Sending OTP email...");
@@ -37,7 +73,7 @@ const sendOTPEmail = async (email, name, otp, type = "verify") => {
         : "Your verification code is:";
 
     const mailOptions = {
-        from: `"InternshipX" <${process.env.EMAIL_USER}>`,
+        from: `"InternshipX" <${user}>`,
         to: email,
         subject,
 
@@ -75,7 +111,20 @@ const sendOTPEmail = async (email, name, otp, type = "verify") => {
         `
     };
 
-    await transporter.sendMail(mailOptions);
+    try {
+        await createTransporter().sendMail(mailOptions);
+    } catch (error) {
+        console.error("EMAIL SEND ERROR", {
+            code: error.code,
+            command: error.command,
+            responseCode: error.responseCode,
+            response: error.response,
+            message: error.message
+        });
+
+        error.publicMessage = getPublicEmailErrorMessage(error);
+        throw error;
+    }
 
     console.log("Email sent successfully!");
 };

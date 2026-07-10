@@ -11,7 +11,7 @@ const {
     resetPassword
 } = require("../controllers/authController");
 
-// Rate limiter for login — 10 attempts per 15 minutes per IP
+// Rate limiter for login - 10 attempts per 15 minutes per IP
 const loginLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 10,
@@ -23,10 +23,10 @@ const loginLimiter = rateLimit({
     legacyHeaders: false
 });
 
-// Rate limiter for OTP verification — 5 attempts per 15 minutes per IP
+// Rate limiter for OTP verification - 10 attempts per 15 minutes per IP
 const otpLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 5,
+    max: 10,
     message: {
         success: false,
         message: "Too many OTP attempts. Please try again after 15 minutes."
@@ -47,10 +47,10 @@ const otpSendLimiter = rateLimit({
     legacyHeaders: false
 });
 
-// Rate limiter for registration — 5 per hour per IP
+// Rate limiter for registration - 20 per hour per IP
 const registerLimiter = rateLimit({
     windowMs: 60 * 60 * 1000,
-    max: 5,
+    max: 20,
     message: {
         success: false,
         message: "Too many registration attempts. Please try again after an hour."
@@ -65,4 +65,5 @@ router.post("/resend-otp", otpSendLimiter, resendOTP);
 router.post("/login", loginLimiter, login);
 router.post("/forgot-password", otpSendLimiter, forgotPassword);
 router.post("/reset-password", otpLimiter, resetPassword);
+
 module.exports = router;

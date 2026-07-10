@@ -12,10 +12,7 @@ const verifyOTPHash = async (plainOtp, hashedOtp) => await bcrypt.compare(plainO
 const normalizeEmail = (email = "") => email.trim().toLowerCase();
 const isValidEmail = (email = "") => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-const emailSendErrorResponse = {
-  success: false,
-  message: "We could not send the email code right now. Please try again in a minute."
-};
+const defaultEmailSendMessage = "We could not send the email code right now. Please try again in a minute.";
 
 const sendCodeEmail = async (...args) => {
   try {
@@ -30,7 +27,10 @@ const handleError = (res, error, label = "AUTH ERROR") => {
   console.error(label, error);
 
   if (error.isEmailSendError) {
-    return res.status(503).json(emailSendErrorResponse);
+    return res.status(503).json({
+      success: false,
+      message: error.publicMessage || defaultEmailSendMessage
+    });
   }
 
   return res.status(500).json({
