@@ -280,3 +280,219 @@ async function loginUser(e) {
     }
 
 }
+
+/* =========================================
+   FORGOT PASSWORD
+========================================= */
+
+const forgotPasswordForm = document.getElementById("forgotPasswordForm");
+
+if (forgotPasswordForm) {
+
+    forgotPasswordForm.addEventListener("submit", sendResetCode);
+
+}
+
+async function sendResetCode(e) {
+
+    e.preventDefault();
+
+    const button = document.getElementById("sendCodeBtn");
+    const message = document.getElementById("message");
+    const email = document.getElementById("email").value.trim();
+
+    message.innerHTML = "";
+
+    if (!email) {
+        message.style.color = "#EF4444";
+        message.innerHTML = "Please enter your email.";
+        return;
+    }
+
+    button.disabled = true;
+    button.innerText = "Sending...";
+
+    try {
+
+        const response = await apiRequest(
+            "/auth/forgot-password",
+            "POST",
+            { email }
+        );
+
+        message.style.color = "#22C55E";
+        message.innerHTML = response.message;
+
+        // Save email and show step 2
+        localStorage.setItem("resetEmail", email);
+
+        setTimeout(() => {
+            showResetForm(email);
+        }, 800);
+
+    } catch (error) {
+
+        message.style.color = "#EF4444";
+        message.innerHTML = error.message;
+
+    } finally {
+
+        button.disabled = false;
+        button.innerText = "Send Reset Code";
+
+    }
+
+}
+
+function showResetForm(email) {
+
+    const step1 = document.getElementById("forgotPasswordForm");
+    const step2 = document.getElementById("verifyResetOtpForm");
+    const title = document.getElementById("fpTitle");
+    const subtitle = document.getElementById("fpSubtitle");
+
+    if (step1) step1.style.display = "none";
+    if (step2) step2.style.display = "block";
+
+    if (title) title.textContent = "Reset Password";
+    if (subtitle) subtitle.textContent = "Enter the code sent to your email and set a new password.";
+
+    const resetEmailInput = document.getElementById("resetEmail");
+    if (resetEmailInput) resetEmailInput.value = email;
+
+}
+
+/* =========================================
+   RESET PASSWORD (Step 2)
+========================================= */
+
+const verifyResetOtpForm = document.getElementById("verifyResetOtpForm");
+
+if (verifyResetOtpForm) {
+
+    verifyResetOtpForm.addEventListener("submit", resetPassword);
+
+    // If page reloaded and email is stored, show step 2
+    const savedResetEmail = localStorage.getItem("resetEmail");
+
+    if (savedResetEmail) {
+        showResetForm(savedResetEmail);
+    }
+
+}
+
+async function resetPassword(e) {
+
+    e.preventDefault();
+
+    const button = document.getElementById("resetPasswordBtn");
+    const message = document.getElementById("resetMessage");
+
+    const email = document.getElementById("resetEmail").value.trim();
+    const otp = document.getElementById("resetOtp").value.trim();
+    const newPassword = document.getElementById("newPassword").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+
+    message.innerHTML = "";
+
+    // Client-side validation
+    if (!otp || otp.length !== 6) {
+        message.style.color = "#EF4444";
+        message.innerHTML = "Please enter a valid 6-digit code.";
+        return;
+    }
+
+    if (newPassword.length < 8) {
+        message.style.color = "#EF4444";
+        message.innerHTML = "Password must be at least 8 characters.";
+        return;
+    }
+
+    if (newPassword !== confirmPassword) {
+        message.style.color = "#EF4444";
+        message.innerHTML = "Passwords do not match.";
+        return;
+    }
+
+    button.disabled = true;
+    button.innerText = "Resetting...";
+
+    try {
+
+        const response = await apiRequest(
+            "/auth/reset-password",
+            "POST",
+            {
+                email,
+                otp,
+                newPassword
+            }
+        );
+
+        message.style.color = "#22C55E";
+        message.innerHTML = response.message;
+
+        localStorage.removeItem("resetEmail");
+
+        setTimeout(() => {
+
+            window.location.href = "login.html";
+
+        }, 1500);
+
+    } catch (error) {
+
+        message.style.color = "#EF4444";
+        message.innerHTML = error.message;
+
+    } finally {
+
+        button.disabled = false;
+        button.innerText = "Reset Password";
+
+    }
+
+}
+
+/* =========================================
+   RESEND RESET CODE
+========================================= */
+
+const resendResetBtn = document.getElementById("resendResetBtn");
+
+if (resendResetBtn) {
+
+    resendResetBtn.addEventListener("click", resendResetCode);
+
+}
+
+async function resendResetCode() {
+
+    const email = document.getElementById("resetEmail").value.trim();
+    const message = document.getElementById("resetMessage");
+
+    if (!email) {
+        message.style.color = "#EF4444";
+        message.innerHTML = "Email is missing. Please go back and try again.";
+        return;
+    }
+
+    try {
+
+        const response = await apiRequest(
+            "/auth/forgot-password",
+            "POST",
+            { email }
+        );
+
+        message.style.color = "#22C55E";
+        message.innerHTML = "A new reset code has been sent.";
+
+    } catch (error) {
+
+        message.style.color = "#EF4444";
+        message.innerHTML = error.message;
+
+    }
+
+}

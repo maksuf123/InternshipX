@@ -118,6 +118,19 @@ button:disabled {
     color: var(--primary);
 }
 
+.logo-link {
+    display: inline-flex;
+    align-items: center;
+    color: inherit;
+    text-decoration: none;
+}
+
+.logo-link:focus-visible {
+    outline: none;
+    box-shadow: var(--ring);
+    border-radius: 8px;
+}
+
 .logo-section p {
     color: var(--text-light);
     margin-top: 6px;
@@ -332,7 +345,7 @@ small {
 
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 20px;
     margin-bottom: 28px;
 }
@@ -423,7 +436,7 @@ small {
 .internship-card {
     border: 1px solid var(--border);
     border-radius: 14px;
-    padding: 22px;
+    padding: 24px;
     background: linear-gradient(180deg, #FFFFFF 0%, #FBFDFF 100%);
     transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
 }
@@ -435,9 +448,14 @@ small {
 }
 
 .internship-card h3 {
-    margin-bottom: 10px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
     color: var(--text);
-    font-size: 1.2rem;
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    text-transform: capitalize;
 }
 
 .internship-card p,
@@ -452,9 +470,10 @@ small {
 
 .internship-meta {
     display: flex;
+    align-items: center;
     flex-wrap: wrap;
     gap: 10px;
-    margin: 12px 0;
+    margin: 14px 0;
 }
 
 .meta-pill,
@@ -462,11 +481,11 @@ small {
 .status-badge {
     display: inline-flex;
     align-items: center;
-    min-height: 30px;
+    min-height: 32px;
     border-radius: 999px;
-    padding: 5px 11px;
+    padding: 6px 14px;
     font-size: .88rem;
-    font-weight: 700;
+    font-weight: 600;
 }
 
 .meta-pill {
@@ -476,9 +495,17 @@ small {
 
 .skill-list {
     display: flex;
+    align-items: center;
     flex-wrap: wrap;
     gap: 8px;
-    margin: 14px 0;
+    margin: 6px 0 14px;
+}
+
+.skill-list strong {
+    color: var(--text);
+    font-size: 0.92rem;
+    font-weight: 700;
+    margin-right: 2px;
 }
 
 .skill-pill {
@@ -615,5 +642,35 @@ small {
     to {
         opacity: 1;
         transform: translateX(0);
+    }
+}
+
+/* ---------- Responsive Overrides ---------- */
+@media (max-width: 768px) {
+    .dashboard-header {
+        padding: 0 16px;
+    }
+
+    .dashboard-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .welcome-card {
+        padding: 24px;
+    }
+
+    .internship-section {
+        padding: 20px;
+    }
+
+    .section-title {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .section-title .btn-primary {
+        width: 100%;
+        text-align: center;
     }
 }

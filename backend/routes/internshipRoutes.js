@@ -7,12 +7,19 @@ const {
     createInternship,
     getCompanyInternships,
     getAllInternships,
+    getPublicInternships,
     deleteInternship,
     updateInternship
 } = require("../controllers/internshipController");
 
 const authMiddleware = require("../middleware/authMiddleware");
 const roleMiddleware = require("../middleware/roleMiddleware");
+
+// Public latest internships for homepage preview
+router.get(
+    "/public/latest",
+    getPublicInternships
+);
 
 // Create internship
 router.post(

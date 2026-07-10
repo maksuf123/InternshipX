@@ -92,6 +92,29 @@ exports.getAllInternships = async (req, res) => {
     }
 
 };
+
+// Get public latest internships for the homepage
+exports.getPublicInternships = async (req, res) => {
+
+    try {
+
+        const internships = await Internship.find()
+            .select("title companyName location stipend duration skills createdAt")
+            .sort({ createdAt: -1 })
+            .limit(3);
+
+        res.json(internships);
+
+    } catch (error) {
+
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+
+    }
+
+};
 exports.deleteInternship = async(req,res)=>{
 
     try{

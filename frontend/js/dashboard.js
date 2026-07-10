@@ -180,9 +180,9 @@ function renderCompanyInternships(data) {
             <div class="internship-card">
                 <h3>${escapeHTML(item.title)}</h3>
                 ${renderMeta([
-                    item.location,
-                    item.duration,
-                    item.stipend
+                    item.location ? `Location: ${item.location}` : null,
+                    item.duration ? `Duration: ${item.duration}` : null,
+                    item.stipend ? `Stipend: ${item.stipend}` : null
                 ])}
                 ${renderSkills(item.skills)}
                 <p class="card-description">${escapeHTML(item.description || "No description added yet.")}</p>
@@ -251,11 +251,11 @@ function renderStudentInternships(data) {
         .map((item) => `
             <div class="internship-card">
                 <h3>${escapeHTML(item.title)}</h3>
-                <p><strong>${escapeHTML(item.companyName || "Company")}</strong></p>
+                <p><strong>Company:</strong> ${escapeHTML(item.companyName || "N/A")}</p>
                 ${renderMeta([
-                    item.location,
-                    item.duration,
-                    item.stipend
+                    item.location ? `Location: ${item.location}` : null,
+                    item.duration ? `Duration: ${item.duration}` : null,
+                    item.stipend ? `Stipend: ${item.stipend}` : null
                 ])}
                 ${renderSkills(item.skills)}
                 <p class="card-description">${escapeHTML(item.description || "No description added yet.")}</p>
@@ -320,11 +320,11 @@ function renderApplications(applications) {
             return `
                 <div class="internship-card">
                     <h3>${escapeHTML(internship.title || "Internship")}</h3>
-                    <p><strong>${escapeHTML(internship.companyName || "Company")}</strong></p>
+                    <p><strong>Company:</strong> ${escapeHTML(internship.companyName || "N/A")}</p>
                     ${renderMeta([
-                        internship.location,
-                        internship.duration,
-                        internship.stipend
+                        internship.location ? `Location: ${internship.location}` : null,
+                        internship.duration ? `Duration: ${internship.duration}` : null,
+                        internship.stipend ? `Stipend: ${internship.stipend}` : null
                     ])}
                     <p>Status: ${renderStatus(app.status)}</p>
                 </div>
@@ -502,6 +502,7 @@ function renderSkills(skills) {
 
     return `
         <div class="skill-list">
+            <strong>Skills:</strong>
             ${skillItems
                 .map((skill) => `<span class="skill-pill">${escapeHTML(skill)}</span>`)
                 .join("")}

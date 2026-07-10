@@ -11,15 +11,33 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-const sendOTPEmail = async (email, name, otp) => {
+const sendOTPEmail = async (email, name, otp, type = "verify") => {
 
     console.log("Sending OTP email...");
     console.log("To:", email);
 
+    const isReset = type === "reset";
+
+    const subject = isReset
+        ? "Reset Your InternshipX Password"
+        : "Verify Your InternshipX Account";
+
+    const heading = isReset
+        ? "Password Reset"
+        : "Email Verification";
+
+    const bodyText = isReset
+        ? "We received a request to reset your password."
+        : "Thank you for registering with InternshipX.";
+
+    const codeLabel = isReset
+        ? "Your password reset code is:"
+        : "Your verification code is:";
+
     const mailOptions = {
         from: `"InternshipX" <${process.env.EMAIL_USER}>`,
         to: email,
-        subject: "Verify Your InternshipX Account",
+        subject,
 
         html: `
         <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;padding:30px;border:1px solid #e5e7eb;border-radius:10px">
@@ -27,9 +45,9 @@ const sendOTPEmail = async (email, name, otp) => {
 
             <p>Hello <strong>${name}</strong>,</p>
 
-            <p>Thank you for registering with InternshipX.</p>
+            <p>${bodyText}</p>
 
-            <p>Your verification code is:</p>
+            <p>${codeLabel}</p>
 
             <h1 style="
                 text-align:center;
@@ -44,6 +62,8 @@ const sendOTPEmail = async (email, name, otp) => {
 
             <p>This OTP is valid for 10 minutes.</p>
 
+            ${isReset ? '<p style="color:#6B7280;">If you did not request a password reset, please ignore this email.</p>' : ''}
+
             <hr>
 
             <p style="font-size:13px;color:#6B7280;">
@@ -52,9 +72,6 @@ const sendOTPEmail = async (email, name, otp) => {
         </div>
         `
     };
-
-    console.log("Sending OTP email...");
-    console.log("To:", email);
 
     await transporter.sendMail(mailOptions);
 
