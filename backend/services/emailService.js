@@ -70,18 +70,25 @@ const sendOTPEmail = async (email, name, otp, type = "verify") => {
     console.log("To:", email);
 
     const isReset = type === "reset";
+    const isEmailChange = type === "email-change";
 
     const subject = isReset
         ? "Reset Your InternshipX Password"
-        : "Verify Your InternshipX Account";
+        : isEmailChange
+            ? "Verify Your New InternshipX Email"
+            : "Verify Your InternshipX Account";
 
     const bodyText = isReset
         ? "We received a request to reset your password."
-        : "Thank you for registering with InternshipX.";
+        : isEmailChange
+            ? "We received a request to change your InternshipX account email."
+            : "Thank you for registering with InternshipX.";
 
     const codeLabel = isReset
         ? "Your password reset code is:"
-        : "Your verification code is:";
+        : isEmailChange
+            ? "Your email change verification code is:"
+            : "Your verification code is:";
 
     const mailOptions = {
         from: `"InternshipX" <maksufmasrur786@gmail.com>`,
@@ -111,7 +118,7 @@ const sendOTPEmail = async (email, name, otp, type = "verify") => {
 
             <p>This OTP is valid for 10 minutes.</p>
 
-            ${isReset ? '<p style="color:#6B7280;">If you did not request a password reset, please ignore this email.</p>' : ''}
+            ${isReset || isEmailChange ? '<p style="color:#6B7280;">If you did not request this, please ignore this email.</p>' : ''}
 
             <hr>
 

@@ -16,6 +16,10 @@
     .preview-grid {
         grid-template-columns: 1fr;
     }
+
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 768px) {
@@ -101,6 +105,8 @@
     .hero-buttons .btn-secondary,
     .action-section > .btn-primary,
     .action-section > .btn-secondary,
+    .email-verify-panel .btn-primary,
+    .email-verify-panel .btn-secondary,
     .card-actions .btn-primary,
     .card-actions .btn-secondary,
     .card-actions .btn-danger {
@@ -110,6 +116,23 @@
     .preview-sidebar,
     .preview-main {
         padding: 18px;
+    }
+
+    .profile-panel {
+        padding: 22px;
+    }
+
+    .profile-summary {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .profile-email-row {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-email-row .btn-secondary {
+        width: 100%;
     }
 
     .features,

@@ -39,6 +39,21 @@ const userSchema = new mongoose.Schema(
         default:null
     },
 
+    pendingEmail:{
+        type:String,
+        default:null
+    },
+
+    emailChangeOtp:{
+        type:String,
+        default:null
+    },
+
+    emailChangeOtpExpiry:{
+        type:Date,
+        default:null
+    },
+
     profileImage:{
         type:String,
         default:""

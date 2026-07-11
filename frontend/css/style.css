@@ -299,6 +299,7 @@ small {
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    flex-wrap: wrap;
     gap: 14px;
     min-width: 0;
 }
@@ -384,6 +385,139 @@ small {
     align-items: center;
     gap: 14px;
     margin-bottom: 24px;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: minmax(260px, .8fr) minmax(320px, 1.2fr);
+    gap: 22px;
+    align-items: start;
+}
+
+.profile-panel {
+    background: #FFFFFF;
+    border: 1px solid rgba(226, 232, 240, .9);
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: var(--shadow-sm);
+}
+
+.profile-summary {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.profile-avatar {
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    background: var(--primary-soft);
+    color: var(--primary-dark);
+    font-size: 1.35rem;
+    font-weight: 800;
+}
+
+.profile-label {
+    color: var(--text-light);
+    font-size: .9rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.profile-summary h2 {
+    margin-bottom: 4px;
+    overflow-wrap: anywhere;
+}
+
+.profile-summary p {
+    color: var(--text-light);
+    overflow-wrap: anywhere;
+}
+
+.role-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 30px;
+    margin-top: 12px;
+    border-radius: 999px;
+    padding: 5px 12px;
+    background: var(--accent-soft);
+    color: #0F766E;
+    font-size: .85rem;
+    font-weight: 800;
+}
+
+.profile-message {
+    min-height: 24px;
+    margin: 4px 0 16px;
+    font-weight: 700;
+    color: var(--text-light);
+}
+
+.profile-message.success {
+    color: var(--success);
+}
+
+.profile-message.error {
+    color: var(--danger);
+}
+
+.profile-email-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 12px;
+    align-items: center;
+}
+
+.profile-email-row input[readonly] {
+    background: var(--surface-muted);
+    color: var(--text-light);
+    cursor: default;
+}
+
+.profile-email-row .btn-secondary {
+    min-width: 142px;
+}
+
+.email-verify-panel {
+    display: none;
+    margin: 4px 0 18px;
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: #F8FAFC;
+}
+
+.email-verify-panel.active {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+}
+
+.email-verify-panel .form-group {
+    grid-column: 1 / -1;
+    margin-bottom: 0;
+}
+
+.email-verify-panel #sendEmailCodeBtn {
+    grid-column: 1;
+    justify-self: start;
+}
+
+.email-verify-panel #verifyEmailBtn {
+    grid-column: 1;
+    justify-self: start;
+}
+
+.email-verify-panel .btn-primary,
+.email-verify-panel .btn-secondary {
+    width: max-content;
 }
 
 .search-section {

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Student Profile | InternshipX</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+
+<body data-profile-role="student">
+    <header class="dashboard-header">
+        <div class="logo">
+            <h2>
+                <a
+                    class="logo-link"
+                    href="index.html"
+                    aria-label="Go to InternshipX homepage">
+                    Internship<span>X</span>
+                </a>
+            </h2>
+        </div>
+
+        <div class="header-right">
+            <span id="studentName">Welcome</span>
+
+            <button
+                id="logoutBtn"
+                class="btn-secondary">
+                Logout
+            </button>
+        </div>
+    </header>
+
+    <main class="dashboard-container">
+        <section class="welcome-card">
+            <h1>Student Profile</h1>
+            <p>Manage your name and email for applications and updates.</p>
+        </section>
+
+        <section class="action-section">
+            <button
+                class="btn-secondary"
+                onclick="window.location.href='student-dashboard.html'">
+                Back to Dashboard
+            </button>
+        </section>
+
+        <section class="profile-grid">
+            <div class="profile-panel profile-summary">
+                <div
+                    id="profileInitials"
+                    class="profile-avatar">
+                    IX
+                </div>
+
+                <div>
+                    <p class="profile-label">Signed in as</p>
+                    <h2 id="profileDisplayName">Student</h2>
+                    <p id="profileDisplayEmail">Loading email...</p>
+                    <span
+                        id="profileRoleBadge"
+                        class="role-badge">
+                        Student
+                    </span>
+                </div>
+            </div>
+
+            <div class="profile-panel">
+                <div class="section-title">
+                    <h2>Edit Profile</h2>
+                </div>
+
+                <form
+                    id="profileForm"
+                    autocomplete="off">
+                    <div class="form-group">
+                        <label for="profileName">Name</label>
+                        <input
+                            type="text"
+                            id="profileName"
+                            placeholder="Enter your name"
+                            minlength="3"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="profileEmail">Email</label>
+                        <div class="profile-email-row">
+                            <input
+                                type="email"
+                                id="profileEmail"
+                                placeholder="Enter your email"
+                                autocomplete="off"
+                                readonly
+                                required>
+
+                            <button
+                                type="button"
+                                id="changeEmailBtn"
+                                class="btn-secondary">
+                                Change Email
+                            </button>
+                        </div>
+                    </div>
+
+                    <div
+                        id="emailVerifyPanel"
+                        class="email-verify-panel">
+                        <button
+                            type="button"
+                            id="sendEmailCodeBtn"
+                            class="btn-secondary">
+                            Send Verification Code
+                        </button>
+
+                        <div class="form-group">
+                            <label for="profileEmailOtp">Verification Code</label>
+                            <input
+                                type="text"
+                                id="profileEmailOtp"
+                                name="emailChangeOtp"
+                                inputmode="numeric"
+                                pattern="[0-9]*"
+                                maxlength="6"
+                                autocomplete="one-time-code"
+                                placeholder="Enter 6-digit code">
+                        </div>
+
+                        <button
+                            type="button"
+                            id="verifyEmailBtn"
+                            class="btn-primary">
+                            Verify Email
+                        </button>
+                    </div>
+
+                    <p
+                        id="profileMessage"
+                        class="profile-message"
+                        aria-live="polite"></p>
+
+                    <button
+                        type="submit"
+                        class="btn-primary">
+                        Save Profile
+                    </button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+
+</html>

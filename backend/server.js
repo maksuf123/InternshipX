@@ -10,6 +10,12 @@ const authMiddleware = require("./middleware/authMiddleware");
 const roleMiddleware = require("./middleware/roleMiddleware");
 const internshipRoutes = require("./routes/internshipRoutes");
 const applicationRoutes = require("./routes/applicationRoutes");
+const {
+    getProfile,
+    updateProfile,
+    requestEmailVerification,
+    verifyEmailUpdate
+} = require("./controllers/profileController");
 const app = express();
 
 app.set("trust proxy", 1);
@@ -24,15 +30,10 @@ app.get("/", (req, res) => {
   res.send("Internship Portal API Running...");
 });
 const PORT = process.env.PORT || 5000;
-app.get("/api/profile", authMiddleware, (req, res) => {
-
-    res.json({
-        success: true,
-        message: "Protected Route Accessed",
-        user: req.user
-    });
-
-});
+app.get("/api/profile", authMiddleware, getProfile);
+app.put("/api/profile", authMiddleware, updateProfile);
+app.post("/api/profile/email-verification", authMiddleware, requestEmailVerification);
+app.post("/api/profile/verify-email", authMiddleware, verifyEmailUpdate);
 app.get(
     "/api/student",
     authMiddleware,

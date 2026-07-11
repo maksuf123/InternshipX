@@ -21,13 +21,14 @@ if (!token || !user) {
 
 const companyName = document.getElementById("companyName");
 const studentName = document.getElementById("studentName");
+const profileBtn = document.getElementById("profileBtn");
 
-if (companyName) {
-    companyName.textContent = `Welcome, ${user.name}`;
-}
+updateHeaderNames();
 
-if (studentName) {
-    studentName.textContent = `Welcome, ${user.name}`;
+if (profileBtn) {
+    profileBtn.addEventListener("click", () => {
+        window.location.href = getProfilePath();
+    });
 }
 
 const logoutBtn = document.getElementById("logoutBtn");
@@ -56,6 +57,15 @@ const modal = document.getElementById("internshipModal");
 const openBtn = document.getElementById("openModalBtn");
 const closeBtn = document.getElementById("closeModal");
 const internshipForm = document.getElementById("internshipForm");
+const profileForm = document.getElementById("profileForm");
+const profileNameInput = document.getElementById("profileName");
+const profileEmailInput = document.getElementById("profileEmail");
+const profileEmailOtpInput = document.getElementById("profileEmailOtp");
+const emailVerifyPanel = document.getElementById("emailVerifyPanel");
+const changeEmailBtn = document.getElementById("changeEmailBtn");
+const sendEmailCodeBtn = document.getElementById("sendEmailCodeBtn");
+const verifyEmailBtn = document.getElementById("verifyEmailBtn");
+let isEditingProfileEmail = false;
 
 if (openBtn && modal && internshipForm) {
     openBtn.addEventListener("click", () => {
@@ -83,6 +93,40 @@ function closeModal() {
 
 if (internshipForm) {
     internshipForm.addEventListener("submit", saveInternship);
+}
+
+if (profileForm) {
+    profileForm.addEventListener("submit", saveProfile);
+}
+
+if (profileEmailInput) {
+    profileEmailInput.addEventListener("input", () => {
+        clearProfileEmailOtp();
+        syncEmailVerificationUI();
+    });
+}
+
+if (profileEmailOtpInput) {
+    profileEmailOtpInput.addEventListener("input", () => {
+        profileEmailOtpInput.value = profileEmailOtpInput.value
+            .replace(/\D/g, "")
+            .slice(0, 6);
+        syncEmailVerificationUI();
+    });
+}
+
+if (changeEmailBtn) {
+    changeEmailBtn.addEventListener("click", () => {
+        setProfileEmailEditing(!isEditingProfileEmail);
+    });
+}
+
+if (sendEmailCodeBtn) {
+    sendEmailCodeBtn.addEventListener("click", requestProfileEmailVerification);
+}
+
+if (verifyEmailBtn) {
+    verifyEmailBtn.addEventListener("click", verifyProfileEmail);
 }
 
 async function saveInternship(event) {
@@ -132,6 +176,10 @@ if (currentPage.includes("my-applications")) {
 
 if (currentPage.includes("company-applications")) {
     loadCompanyApplications();
+}
+
+if (currentPage.includes("student-profile") || currentPage.includes("company-profile")) {
+    loadProfilePage();
 }
 
 async function loadCompanyDashboard() {
@@ -227,6 +275,204 @@ async function loadStudentApplicationStats() {
         updateText("acceptedApplications", accepted);
     } catch (error) {
         console.log(error);
+    }
+}
+
+async function loadProfilePage() {
+    const expectedRole = document.body.dataset.profileRole;
+
+    if (expectedRole && user?.role !== expectedRole) {
+        window.location.href = getProfilePath();
+        return;
+    }
+
+    renderProfile(user);
+
+    try {
+        const response = await apiRequest("/profile");
+        saveUserSession(response.user, response.token);
+        renderProfile(response.user);
+    } catch (error) {
+        showProfileMessage(error.message, true);
+        showToast(error.message);
+    }
+}
+
+async function saveProfile(event) {
+    event.preventDefault();
+
+    const submitButton = profileForm.querySelector('button[type="submit"]');
+    const profile = {
+        name: profileNameInput.value.trim(),
+        email: profileEmailInput.value.trim()
+    };
+
+    if (normalizeProfileEmail(profile.email) !== normalizeProfileEmail(user?.email)) {
+        showProfileMessage("Verify the new email first.", true);
+        syncEmailVerificationUI();
+        return;
+    }
+
+    try {
+        if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.textContent = "Saving...";
+        }
+
+        showProfileMessage("Saving profile...");
+
+        const response = await apiRequest("/profile", "PUT", profile);
+
+        saveUserSession(response.user, response.token);
+        renderProfile(response.user);
+        showProfileMessage(response.message);
+        showToast(response.message);
+    } catch (error) {
+        showProfileMessage(error.message, true);
+        showToast(error.message);
+    } finally {
+        if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.textContent = "Save Profile";
+        }
+    }
+}
+
+function renderProfile(profileUser) {
+    if (!profileUser) return;
+
+    if (profileNameInput) {
+        profileNameInput.value = profileUser.name || "";
+    }
+
+    if (profileEmailInput) {
+        profileEmailInput.value = profileUser.pendingEmail || profileUser.email || "";
+    }
+
+    updateText("profileDisplayName", profileUser.name || "Profile");
+    updateText("profileDisplayEmail", profileUser.email || "");
+    updateText("profileRoleBadge", getRoleLabel(profileUser.role));
+    updateText("profileInitials", getInitials(profileUser.name));
+    setProfileEmailEditing(Boolean(profileUser.pendingEmail), {
+        keepFocus: true,
+        keepValue: true
+    });
+}
+
+function saveUserSession(nextUser, nextToken) {
+    if (nextToken) {
+        localStorage.setItem("token", nextToken);
+    }
+
+    if (nextUser) {
+        user = {
+            ...user,
+            ...nextUser
+        };
+
+        localStorage.setItem("user", JSON.stringify(user));
+        updateHeaderNames();
+    }
+}
+
+async function requestProfileEmailVerification() {
+    if (!profileEmailInput.checkValidity()) {
+        profileEmailInput.reportValidity();
+        return;
+    }
+
+    const email = profileEmailInput.value.trim();
+
+    if (normalizeProfileEmail(email) === normalizeProfileEmail(user?.email)) {
+        showProfileMessage("This email is already verified.", false);
+        syncEmailVerificationUI();
+        return;
+    }
+
+    try {
+        sendEmailCodeBtn.disabled = true;
+        sendEmailCodeBtn.textContent = "Sending...";
+        showProfileMessage("Sending verification code...");
+
+        const response = await apiRequest(
+            "/profile/email-verification",
+            "POST",
+            { email }
+        );
+
+        user = {
+            ...user,
+            pendingEmail: response.pendingEmail
+        };
+        localStorage.setItem("user", JSON.stringify(user));
+
+        if (profileEmailOtpInput) {
+            profileEmailOtpInput.value = "";
+            profileEmailOtpInput.focus();
+        }
+
+        showProfileMessage(response.message);
+        showToast(response.message);
+    } catch (error) {
+        showProfileMessage(error.message, true);
+        showToast(error.message);
+    } finally {
+        sendEmailCodeBtn.disabled = false;
+        syncEmailVerificationUI();
+    }
+}
+
+async function verifyProfileEmail() {
+    if (!profileNameInput.checkValidity()) {
+        profileNameInput.reportValidity();
+        return;
+    }
+
+    if (!profileEmailInput.checkValidity()) {
+        profileEmailInput.reportValidity();
+        return;
+    }
+
+    const email = profileEmailInput.value.trim();
+    const otp = profileEmailOtpInput.value.trim().replace(/\D/g, "");
+
+    if (otp.length !== 6) {
+        showProfileMessage("Enter the 6-digit verification code.", true);
+        profileEmailOtpInput.focus();
+        return;
+    }
+
+    try {
+        verifyEmailBtn.disabled = true;
+        verifyEmailBtn.textContent = "Verifying...";
+        showProfileMessage("Verifying email...");
+
+        const response = await apiRequest(
+            "/profile/verify-email",
+            "POST",
+            {
+                email,
+                otp,
+                name: profileNameInput.value.trim()
+            }
+        );
+
+        saveUserSession(response.user, response.token);
+        renderProfile(response.user);
+
+        if (profileEmailOtpInput) {
+            profileEmailOtpInput.value = "";
+        }
+
+        showProfileMessage(response.message);
+        showToast(response.message);
+    } catch (error) {
+        showProfileMessage(error.message, true);
+        showToast(error.message);
+    } finally {
+        verifyEmailBtn.disabled = false;
+        verifyEmailBtn.textContent = "Verify Email";
+        syncEmailVerificationUI();
     }
 }
 
@@ -484,6 +730,123 @@ function searchInternships() {
     });
 
     renderStudentInternships(filtered);
+}
+
+function updateHeaderNames() {
+    const displayName = user?.name || "User";
+
+    if (companyName) {
+        companyName.textContent = `Welcome, ${displayName}`;
+    }
+
+    if (studentName) {
+        studentName.textContent = `Welcome, ${displayName}`;
+    }
+}
+
+function getProfilePath() {
+    if (user?.role === "company") {
+        return "company-profile.html";
+    }
+
+    if (user?.role === "student") {
+        return "student-profile.html";
+    }
+
+    return "login.html";
+}
+
+function getInitials(name = "") {
+    const initials = name
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 2)
+        .map((part) => part[0])
+        .join("")
+        .toUpperCase();
+
+    return initials || "IX";
+}
+
+function getRoleLabel(role = "") {
+    if (!role) return "Profile";
+
+    return role.charAt(0).toUpperCase() + role.slice(1);
+}
+
+function showProfileMessage(message, isError = false) {
+    const profileMessage = document.getElementById("profileMessage");
+
+    if (!profileMessage) return;
+
+    profileMessage.textContent = message;
+    profileMessage.className = isError
+        ? "profile-message error"
+        : "profile-message success";
+}
+
+function setProfileEmailEditing(isEditing, options = {}) {
+    if (!profileEmailInput) return;
+
+    isEditingProfileEmail = isEditing;
+    profileEmailInput.readOnly = !isEditingProfileEmail;
+
+    if (isEditingProfileEmail && !options.keepValue) {
+        clearProfileEmailOtp();
+    }
+
+    if (!isEditingProfileEmail && !options.keepValue) {
+        profileEmailInput.value = user?.email || "";
+        user = {
+            ...user,
+            pendingEmail: ""
+        };
+        localStorage.setItem("user", JSON.stringify(user));
+        clearProfileEmailOtp();
+    }
+
+    if (changeEmailBtn) {
+        changeEmailBtn.textContent = isEditingProfileEmail ? "Cancel" : "Change Email";
+    }
+
+    if (isEditingProfileEmail && !options.keepFocus) {
+        setTimeout(() => {
+            profileEmailInput.focus();
+            profileEmailInput.select();
+        }, 0);
+    }
+
+    syncEmailVerificationUI();
+}
+
+function clearProfileEmailOtp() {
+    if (profileEmailOtpInput) {
+        profileEmailOtpInput.value = "";
+    }
+}
+
+function syncEmailVerificationUI() {
+    if (!emailVerifyPanel || !profileEmailInput || !sendEmailCodeBtn || !verifyEmailBtn) return;
+
+    const typedEmail = normalizeProfileEmail(profileEmailInput.value);
+    const currentEmail = normalizeProfileEmail(user?.email);
+    const pendingEmail = normalizeProfileEmail(user?.pendingEmail);
+    const isChangingEmail = Boolean(typedEmail) && typedEmail !== currentEmail;
+    const canRequestCode = isEditingProfileEmail && isChangingEmail && profileEmailInput.checkValidity();
+    const codeReady = !profileEmailOtpInput ||
+        profileEmailOtpInput.value.trim().replace(/\D/g, "").length === 6;
+
+    emailVerifyPanel.classList.toggle("active", isEditingProfileEmail);
+    sendEmailCodeBtn.disabled = !canRequestCode;
+    verifyEmailBtn.disabled = !isEditingProfileEmail || !isChangingEmail || !codeReady;
+    sendEmailCodeBtn.textContent = pendingEmail && pendingEmail === typedEmail
+        ? "Resend Verification Code"
+        : "Send Verification Code";
+}
+
+function normalizeProfileEmail(email = "") {
+    return email.trim().toLowerCase();
 }
 
 function renderMeta(items) {
