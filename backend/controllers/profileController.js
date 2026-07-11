@@ -23,7 +23,11 @@ const formatUser = (user) => ({
     college: user.college || "",
     skills: user.skills || [],
     resumeUrl: user.resumeUrl || "",
-    resumeName: user.resumeName || ""
+    resumeName: user.resumeName || "",
+    industry: user.industry || "",
+    location: user.location || "",
+    website: user.website || "",
+    about: user.about || ""
 });
 
 const createProfileToken = (user) => jwt.sign(
@@ -73,7 +77,7 @@ const handleProfileError = (res, error, label) => {
 exports.getProfile = async (req, res) => {
     try {
         const user = await User.findById(req.user.id).select(
-            "name email role pendingEmail profileImage phone college skills resumeUrl resumeName"
+            "name email role pendingEmail profileImage phone college skills resumeUrl resumeName industry location website about"
         );
 
         if (!user) {
@@ -103,6 +107,10 @@ exports.updateProfile = async (req, res) => {
         const email = normalizeEmail(req.body.email);
         const phone = String(req.body.phone || "").trim();
         const college = String(req.body.college || "").trim();
+        const industry = String(req.body.industry || "").trim();
+        const location = String(req.body.location || "").trim();
+        const website = String(req.body.website || "").trim();
+        const about = String(req.body.about || "").trim();
 
         let skills = req.body.skills;
         if (typeof skills === "string") {
@@ -152,6 +160,10 @@ exports.updateProfile = async (req, res) => {
         user.phone = phone;
         user.college = college;
         user.skills = skills;
+        user.industry = industry;
+        user.location = location;
+        user.website = website;
+        user.about = about;
 
         await user.save();
 
@@ -355,7 +367,6 @@ exports.uploadResume = async (req, res) => {
             });
         }
 
-        // Upload buffer to Cloudinary
         const uploadStream = cloudinary.uploader.upload_stream(
             {
                 folder: "resumes",
@@ -371,7 +382,6 @@ exports.uploadResume = async (req, res) => {
                     });
                 }
 
-                // Save URL and Name to user document
                 user.resumeUrl = result.secure_url;
                 user.resumeName = req.file.originalname;
                 await user.save();
@@ -392,6 +402,39 @@ exports.uploadResume = async (req, res) => {
         return res.status(500).json({
             success: false,
             message: "Server Error during resume upload."
+        });
+    }
+};
+
+exports.getCompanyPublicProfile = async (req, res) => {
+    try {
+        const company = await User.findOne({ _id: req.params.id, role: "company" }).select(
+            "name email industry location website about"
+        );
+
+        if (!company) {
+            return res.status(404).json({
+                success: false,
+                message: "Company profile not found."
+            });
+        }
+
+        return res.json({
+            success: true,
+            company: {
+                name: company.name,
+                email: company.email,
+                industry: company.industry || "",
+                location: company.location || "",
+                website: company.website || "",
+                about: company.about || ""
+            }
+        });
+    } catch (error) {
+        console.error("GET COMPANY PUBLIC PROFILE ERROR", error);
+        return res.status(500).json({
+            success: false,
+            message: "Server Error"
         });
     }
 };

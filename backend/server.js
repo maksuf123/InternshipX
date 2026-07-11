@@ -15,7 +15,8 @@ const {
     updateProfile,
     requestEmailVerification,
     verifyEmailUpdate,
-    uploadResume
+    uploadResume,
+    getCompanyPublicProfile
 } = require("./controllers/profileController");
 const multer = require("multer");
 const upload = multer({
@@ -37,6 +38,7 @@ app.get("/", (req, res) => {
 });
 const PORT = process.env.PORT || 5000;
 app.get("/api/profile", authMiddleware, getProfile);
+app.get("/api/profile/company/:id", authMiddleware, getCompanyPublicProfile);
 app.put("/api/profile", authMiddleware, updateProfile);
 app.post("/api/profile/email-verification", authMiddleware, requestEmailVerification);
 app.post("/api/profile/verify-email", authMiddleware, verifyEmailUpdate);

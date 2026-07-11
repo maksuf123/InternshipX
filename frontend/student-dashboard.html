@@ -100,6 +100,50 @@
         </section>
     </main>
 
+    <!-- Company Profile View Modal -->
+    <div id="companyProfileModal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(8px); z-index: 1000; justify-content: center; align-items: center; padding: 20px;">
+        <div class="modal-content" style="background: #ffffff; width: 100%; max-width: 500px; padding: 30px; border-radius: 16px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); position: relative; border: 1px solid #e2e8f0; animation: modalFadeIn 0.3s ease-out;">
+            <button onclick="closeCompanyProfileModal()" style="position: absolute; top: 15px; right: 15px; border: none; background: transparent; font-size: 1.5rem; cursor: pointer; color: #64748b; font-weight: bold; line-height: 1;">&times;</button>
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                <div style="width: 50px; height: 50px; background: #3B82F6; color: #ffffff; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 600;" id="compModalInitials">CO</div>
+                <div>
+                    <h2 id="compModalName" style="margin: 0; font-size: 1.5rem; color: #0f172a; font-weight: 600;">Company Name</h2>
+                    <p style="margin: 2px 0 0 0; color: #64748b; font-size: 0.9rem;" id="compModalEmail">Email</p>
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <p style="margin: 0 0 5px 0; font-weight: 600; color: #334155; font-size: 0.95rem;">Industry</p>
+                <p id="compModalIndustry" style="margin: 0; color: #475569;">N/A</p>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <p style="margin: 0 0 5px 0; font-weight: 600; color: #334155; font-size: 0.95rem;">Location</p>
+                <p id="compModalLocation" style="margin: 0; color: #475569;">N/A</p>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <p style="margin: 0 0 5px 0; font-weight: 600; color: #334155; font-size: 0.95rem;">Website</p>
+                <a id="compModalWebsite" href="#" target="_blank" style="color: #3B82F6; text-decoration: underline; word-break: break-all; display: none;"></a>
+                <span id="compModalWebsiteNone" style="color: #475569;">N/A</span>
+            </div>
+            
+            <div style="margin-bottom: 25px;">
+                <p style="margin: 0 0 5px 0; font-weight: 600; color: #334155; font-size: 0.95rem;">About</p>
+                <p id="compModalAbout" style="margin: 0; color: #475569; white-space: pre-wrap; font-size: 0.95rem; line-height: 1.5; max-height: 150px; overflow-y: auto;">About the company...</p>
+            </div>
+            
+            <button onclick="closeCompanyProfileModal()" class="btn-primary" style="width: 100%;">Close</button>
+        </div>
+    </div>
+    
+    <style>
+        @keyframes modalFadeIn {
+            from { transform: translateY(10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+
     <script src="js/config.js"></script>
     <script src="js/api.js"></script>
     <script src="js/dashboard.js"></script>

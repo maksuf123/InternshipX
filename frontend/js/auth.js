@@ -27,9 +27,10 @@ async function registerUser(e) {
 
     const password = document.getElementById("password").value;
 
-    const role = document.querySelector(
-        'input[name="role"]:checked'
-    ).value;
+    const role = document.getElementById("role").value;
+    const college = document.getElementById("college") ? document.getElementById("college").value.trim() : "";
+    const industry = document.getElementById("industry") ? document.getElementById("industry").value.trim() : "";
+    const location = document.getElementById("location") ? document.getElementById("location").value.trim() : "";
 
     // Validation
 
@@ -64,7 +65,10 @@ async function registerUser(e) {
                 name,
                 email,
                 password,
-                role
+                role,
+                college: role === "student" ? college : "",
+                industry: role === "company" ? industry : "",
+                location: role === "company" ? location : ""
             }
         );
 

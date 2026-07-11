@@ -67,6 +67,10 @@ const profileSkillsInput = document.getElementById("profileSkills");
 const profileResumeInput = document.getElementById("profileResume");
 const resumeContainer = document.getElementById("resumeContainer");
 const currentResumeLink = document.getElementById("currentResumeLink");
+const profileIndustryInput = document.getElementById("profileIndustry");
+const profileLocationInput = document.getElementById("profileLocation");
+const profileWebsiteInput = document.getElementById("profileWebsite");
+const profileAboutInput = document.getElementById("profileAbout");
 const emailVerifyPanel = document.getElementById("emailVerifyPanel");
 const changeEmailBtn = document.getElementById("changeEmailBtn");
 const sendEmailCodeBtn = document.getElementById("sendEmailCodeBtn");
@@ -318,7 +322,11 @@ async function saveProfile(event) {
         email: profileEmailInput.value.trim(),
         phone: profilePhoneInput ? profilePhoneInput.value.trim() : "",
         college: profileCollegeInput ? profileCollegeInput.value.trim() : "",
-        skills: profileSkillsInput ? profileSkillsInput.value.trim() : ""
+        skills: profileSkillsInput ? profileSkillsInput.value.trim() : "",
+        industry: profileIndustryInput ? profileIndustryInput.value.trim() : "",
+        location: profileLocationInput ? profileLocationInput.value.trim() : "",
+        website: profileWebsiteInput ? profileWebsiteInput.value.trim() : "",
+        about: profileAboutInput ? profileAboutInput.value.trim() : ""
     };
 
     if (normalizeProfileEmail(profile.email) !== normalizeProfileEmail(user?.email)) {
@@ -369,7 +377,6 @@ async function saveProfile(event) {
         showProfileMessage(response.message);
         showToast(response.message);
 
-        // Clear file input since upload is complete
         if (profileResumeInput) {
             profileResumeInput.value = "";
         }
@@ -406,6 +413,22 @@ function renderProfile(profileUser) {
     if (profileSkillsInput) {
         const skillsArray = profileUser.skills || [];
         profileSkillsInput.value = Array.isArray(skillsArray) ? skillsArray.join(", ") : skillsArray;
+    }
+
+    if (profileIndustryInput) {
+        profileIndustryInput.value = profileUser.industry || "";
+    }
+
+    if (profileLocationInput) {
+        profileLocationInput.value = profileUser.location || "";
+    }
+
+    if (profileWebsiteInput) {
+        profileWebsiteInput.value = profileUser.website || "";
+    }
+
+    if (profileAboutInput) {
+        profileAboutInput.value = profileUser.about || "";
     }
 
     if (resumeContainer && currentResumeLink && profileUser.resumeUrl) {
@@ -561,27 +584,33 @@ function renderStudentInternships(data) {
     }
 
     list.innerHTML = data
-        .map((item) => `
-            <div class="internship-card">
-                <h3>${escapeHTML(item.title)}</h3>
-                <p><strong>Company:</strong> ${escapeHTML(item.companyName || "N/A")}</p>
-                ${renderMeta([
-                    item.location ? `Location: ${item.location}` : null,
-                    item.duration ? `Duration: ${item.duration}` : null,
-                    item.stipend ? `Stipend: ${item.stipend}` : null
-                ])}
-                ${renderSkills(item.skills)}
-                <p class="card-description">${escapeHTML(item.description || "No description added yet.")}</p>
+        .map((item) => {
+            const companyLink = item.postedBy
+                ? `<a href="#" onclick="viewCompanyProfile('${item.postedBy}'); return false;" style="color: #3B82F6; text-decoration: underline; font-weight: 500;">${escapeHTML(item.companyName || "N/A")}</a>`
+                : escapeHTML(item.companyName || "N/A");
 
-                <div class="card-actions">
-                    <button
-                        class="btn-primary apply-btn"
-                        data-id="${item._id}">
-                        Apply Now
-                    </button>
+            return `
+                <div class="internship-card">
+                    <h3>${escapeHTML(item.title)}</h3>
+                    <p><strong>Company:</strong> ${companyLink}</p>
+                    ${renderMeta([
+                        item.location ? `Location: ${item.location}` : null,
+                        item.duration ? `Duration: ${item.duration}` : null,
+                        item.stipend ? `Stipend: ${item.stipend}` : null
+                    ])}
+                    ${renderSkills(item.skills)}
+                    <p class="card-description">${escapeHTML(item.description || "No description added yet.")}</p>
+
+                    <div class="card-actions">
+                        <button
+                            class="btn-primary apply-btn"
+                            data-id="${item._id}">
+                            Apply Now
+                        </button>
+                    </div>
                 </div>
-            </div>
-        `)
+            `;
+        })
         .join("");
 }
 
@@ -676,7 +705,7 @@ function renderCompanyApplications(applications) {
         .map((app) => {
             const student = app.student || {};
             const skills = Array.isArray(student.skills) ? student.skills.join(", ") : (student.skills || "N/A");
-            const resumeLink = app.resume || student.resumeUrl;
+            const resumeLink = student.resumeUrl || app.resume;
             
             const resumeHTML = resumeLink
                 ? `<p><strong>Resume:</strong> <a href="${escapeHTML(resumeLink)}" target="_blank" style="color: #3B82F6; text-decoration: underline;">Download Resume</a></p>`
@@ -1008,4 +1037,41 @@ function showToast(message) {
     setTimeout(() => {
         toast.remove();
     }, 3000);
+}
+
+async function viewCompanyProfile(companyId) {
+    try {
+        const res = await apiRequest(`/profile/company/${companyId}`);
+        if (res && res.success) {
+            const comp = res.company;
+            document.getElementById("compModalName").textContent = comp.name || "N/A";
+            document.getElementById("compModalEmail").textContent = comp.email || "N/A";
+            document.getElementById("compModalIndustry").textContent = comp.industry || "N/A";
+            document.getElementById("compModalLocation").textContent = comp.location || "N/A";
+            
+            const initials = getInitials(comp.name);
+            document.getElementById("compModalInitials").textContent = initials;
+
+            const webLink = document.getElementById("compModalWebsite");
+            const webLinkNone = document.getElementById("compModalWebsiteNone");
+            if (comp.website) {
+                webLink.href = comp.website.startsWith("http") ? comp.website : `https://${comp.website}`;
+                webLink.textContent = comp.website;
+                webLink.style.display = "inline";
+                webLinkNone.style.display = "none";
+            } else {
+                webLink.style.display = "none";
+                webLinkNone.style.display = "inline";
+            }
+            
+            document.getElementById("compModalAbout").textContent = comp.about || "No details provided.";
+            document.getElementById("companyProfileModal").style.display = "flex";
+        }
+    } catch (error) {
+        showToast("Failed to fetch company profile.");
+    }
+}
+
+function closeCompanyProfileModal() {
+    document.getElementById("companyProfileModal").style.display = "none";
 }

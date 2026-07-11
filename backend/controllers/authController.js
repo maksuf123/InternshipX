@@ -62,7 +62,7 @@ const requireValidEmail = (res, email) => {
 // Register
 exports.register = async (req, res) => {
   try {
-    const { name, password } = req.body;
+    const { name, password, college, industry, location } = req.body;
     const email = normalizeEmail(req.body.email);
     const role = VALID_ROLES.includes(req.body.role) ? req.body.role : "student";
 
@@ -102,6 +102,13 @@ exports.register = async (req, res) => {
       existingUser.otp = hashedOtp;
       existingUser.otpExpiry = Date.now() + OTP_EXPIRY_MS;
 
+      if (role === "student") {
+        existingUser.college = college || "";
+      } else if (role === "company") {
+        existingUser.industry = industry || "";
+        existingUser.location = location || "";
+      }
+
       await existingUser.save();
       user = existingUser;
     } else {
@@ -111,7 +118,10 @@ exports.register = async (req, res) => {
         password: hashedPassword,
         role,
         otp: hashedOtp,
-        otpExpiry: Date.now() + OTP_EXPIRY_MS
+        otpExpiry: Date.now() + OTP_EXPIRY_MS,
+        college: role === "student" ? (college || "") : "",
+        industry: role === "company" ? (industry || "") : "",
+        location: role === "company" ? (location || "") : ""
       });
     }
 

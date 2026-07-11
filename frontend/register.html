@@ -118,45 +118,53 @@
 
             </div>
 
-            <!-- Role -->
-
             <div class="input-group">
+                <label for="role">I am a</label>
+                <div class="input-box">
+                    <i data-lucide="graduation-cap" id="roleIcon"></i>
+                    <select id="role" name="role" required style="width: 100%; border: none; background: transparent; outline: none; font-size: 1rem; color: inherit; padding-left: 5px;">
+                        <option value="student" style="background-color: #ffffff; color: #1e293b;">Student</option>
+                        <option value="company" style="background-color: #ffffff; color: #1e293b;">Company</option>
+                    </select>
+                </div>
+            </div>
 
-                <label>Register As</label>
+            <div class="input-group" id="studentFields">
+                <label>College / University</label>
+                <div class="input-box">
+                    <i data-lucide="book-open"></i>
+                    <input
+                        type="text"
+                        id="college"
+                        placeholder="e.g. MIT University"
+                    >
+                </div>
+            </div>
 
-                <div class="role-selector">
-
-                    <label class="role-card">
-
+            <div id="companyFields" style="display: none;">
+                <div class="input-group">
+                    <label>Industry</label>
+                    <div class="input-box">
+                        <i data-lucide="building"></i>
                         <input
-                            type="radio"
-                            name="role"
-                            value="student"
-                            checked
+                            type="text"
+                            id="industry"
+                            placeholder="e.g. Software"
                         >
-
-                        <i data-lucide="graduation-cap"></i>
-
-                        <span>Student</span>
-
-                    </label>
-
-                    <label class="role-card">
-
-                        <input
-                            type="radio"
-                            name="role"
-                            value="company"
-                        >
-
-                        <i data-lucide="briefcase-business"></i>
-
-                        <span>Company</span>
-
-                    </label>
-
+                    </div>
                 </div>
 
+                <div class="input-group">
+                    <label>Location</label>
+                    <div class="input-box">
+                        <i data-lucide="map-pin"></i>
+                        <input
+                            type="text"
+                            id="location"
+                            placeholder="e.g. Bangalore"
+                        >
+                    </div>
+                </div>
             </div>
 
             <button
@@ -191,6 +199,24 @@
 
 <script>
     lucide.createIcons();
+
+    const roleSelect = document.getElementById("role");
+    const roleIcon = document.getElementById("roleIcon");
+    const studentFields = document.getElementById("studentFields");
+    const companyFields = document.getElementById("companyFields");
+
+    roleSelect.addEventListener("change", () => {
+        if (roleSelect.value === "student") {
+            studentFields.style.display = "block";
+            companyFields.style.display = "none";
+            roleIcon.setAttribute("data-lucide", "graduation-cap");
+        } else {
+            studentFields.style.display = "none";
+            companyFields.style.display = "block";
+            roleIcon.setAttribute("data-lucide", "briefcase");
+        }
+        lucide.createIcons();
+    });
 </script>
 
 <script src="js/config.js"></script>

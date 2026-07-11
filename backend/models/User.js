@@ -82,6 +82,26 @@ const userSchema = new mongoose.Schema(
     resumeName:{
         type:String,
         default:""
+    },
+
+    industry:{
+        type:String,
+        default:""
+    },
+
+    location:{
+        type:String,
+        default:""
+    },
+
+    website:{
+        type:String,
+        default:""
+    },
+
+    about:{
+        type:String,
+        default:""
     }
 
 },
