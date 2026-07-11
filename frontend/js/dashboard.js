@@ -117,7 +117,12 @@ if (profileEmailOtpInput) {
 
 if (changeEmailBtn) {
     changeEmailBtn.addEventListener("click", () => {
-        setProfileEmailEditing(!isEditingProfileEmail);
+        const enteringEditMode = !isEditingProfileEmail;
+        setProfileEmailEditing(enteringEditMode);
+        if (enteringEditMode && user?.pendingEmail) {
+            profileEmailInput.value = user.pendingEmail;
+            syncEmailVerificationUI();
+        }
     });
 }
 
@@ -346,14 +351,14 @@ function renderProfile(profileUser) {
     }
 
     if (profileEmailInput) {
-        profileEmailInput.value = profileUser.pendingEmail || profileUser.email || "";
+        profileEmailInput.value = profileUser.email || "";
     }
 
     updateText("profileDisplayName", profileUser.name || "Profile");
     updateText("profileDisplayEmail", profileUser.email || "");
     updateText("profileRoleBadge", getRoleLabel(profileUser.role));
     updateText("profileInitials", getInitials(profileUser.name));
-    setProfileEmailEditing(Boolean(profileUser.pendingEmail), {
+    setProfileEmailEditing(false, {
         keepFocus: true,
         keepValue: true
     });
