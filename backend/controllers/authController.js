@@ -61,9 +61,16 @@ const requireValidEmail = (res, email) => {
 
 exports.register = async (req, res) => {
   try {
+    if (req.body && req.body.role === "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Admin accounts cannot be created through public registration."
+      });
+    }
+
     const { name, password, college, industry, location } = req.body;
     const email = normalizeEmail(req.body.email);
-    const role = VALID_ROLES.includes(req.body.role) ? req.body.role : "student";
+    const role = ["student", "company"].includes(req.body.role) ? req.body.role : "student";
 
     if (!name || !email || !password) {
       return res.status(400).json({
